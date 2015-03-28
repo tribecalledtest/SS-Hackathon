@@ -36,8 +36,10 @@ $( document ).ready(function() {
 	});
 
 	$('.revert-btn').on('click',function(){
-		if (receivedScore) {
+		if (receivedScoreCopy) {
 			score = receivedScoreCopy;
+			noteCount = receivedScoreCopy.synth.length;
+
 		}
 		else {
 			score = {"synth": []};
@@ -59,29 +61,34 @@ $( document ).ready(function() {
 
 	$('.play-btn').on('click',function(){
 		 //parse the score into Notes
+
+		Tone.Transport.clearTimelines();
 		Tone.Note.parseScore(score);
 		$('.play-btn').addClass('playing');
 		$('.play-btn').text('Playing');
 
+		console.log('playing', score);
 		 //route all notes on the "synth" channel
+
 		Tone.Note.route("synth", function(time, note){
 
 	    	synth.triggerAttackRelease(note,"8n", time);
 		});
+
 		Tone.Transport.start();
 
 	});
 
 
 	$(".save-btn").on("click", function() {
-		console.log(score);
+		console.log('saving',score);
 		if (updateId) {
 			socket.emit('save',{type: score, updateId : updateId});
 		} else {
 			socket.emit('save',{type: score});
 		}
 		// socket.emit("save", score); // this will go inside the listener for a click on the SEND button
-		score = {};
+		score = {'synth':[]};
 		$('#KeyRack').css('border-color', 'red');
 	});
 
@@ -97,10 +104,11 @@ $( document ).ready(function() {
 
 
 	socket.on("receive", function(receivedScore) {
+		console.log('recieved bottle',receivedScore.bottle);
 		alert('you got a bottle id: ' + receivedScore._id);
 		score = receivedScore.bottle;
-		receivedScoreCopy = receivedScore;
+		noteCount = receivedScore.bottle.synth.length;
+		receivedScoreCopy = receivedScore.bottle;
 		updateId = receivedScore._id;
-		console.log(score);
 	});
 });
