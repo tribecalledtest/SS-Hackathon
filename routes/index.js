@@ -45,6 +45,19 @@ module.exports = function(io) {
 			available: true
 		});
 
+		setInterval(function() {
+			// bottle randomizer
+			Bottle.find({available : true}, function(err, bottles) {
+				if (bottles.length > 0) {
+					var nextId = userRandomizer();
+					if (nextId) {
+						socket.broadcast.to(nextId).emit('receive', bottleRandomizer(bottles));
+					}
+					console.log(sessions);
+				}
+			});
+		}, 1000);
+
 		console.log(sessions);
 
 		socket.on('disconnect', function(){
@@ -75,17 +88,6 @@ module.exports = function(io) {
 
 		socket.on('avail', function() {
 			setAvailability(socket.id,true);
-
-			// bottle randomizer
-			Bottle.find({available : true, modified : { $ne : socket.id}}, function(err, bottles) {
-				if (bottles.length > 0) {
-					var nextId = userRandomizer();
-					if (nextId) {
-						socket.broadcast.to(nextId).emit('receive', bottleRandomizer(bottles));
-					}
-					console.log(sessions);
-				}
-			});
 		});
 
 		socket.on('notavail', function() {

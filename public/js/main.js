@@ -74,14 +74,22 @@ $( document ).ready(function() {
 
 
 	$(".save-btn").on("click", function() {
-		socket.emit("save", score); // this will go inside the listener for a click on the SEND button
+		console.log(score);
+        socket.emit('save',{type: score});
+		// socket.emit("save", score); // this will go inside the listener for a click on the SEND button
 		score = {};
 
 	});
 
+	$(".receive-btn").on('click', function() {
+		socket.emit('avail');
+	});
+
 
 	socket.on("receive", function(receivedScore) {
-		score = receivedScore;
+		alert('you got a bottle');
+		score = receivedScore.bottle;
 		receivedScoreCopy = receivedScore;
+		console.log(score);
 	});
 });

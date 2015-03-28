@@ -5,7 +5,7 @@
 	<title>NOTE IN A BOTTLE</title>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
+	
 	<script type="text/javascript" src="js/build/jquery.min.js"></script>
 	<script type="text/javascript" src="js/build/Tone.js"></script>
 	<script type="text/javascript" src="js/build/Tone.Preset.js"></script>
@@ -13,11 +13,11 @@
 	<script type="text/javascript" src="js/build/Interface.js"></script>
 	<script type="text/javascript" src="js/build/qwerty-hancock.js"></script>
 	<script type="text/javascript" src="js/main.js"></script>
-
-	<link rel="stylesheet" type="text/css" href="stylesheets/examples.css">
-	<link rel="stylesheet" type="text/css" href="stylesheets/prism.css">
-	<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
-	<link rel="stylesheet" type="text/css" href="bootstrap/dist/css/bootstrap.css">
+	
+	<link rel="stylesheet" type="text/css" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="/stylesheets/examples.css">
+	<link rel="stylesheet" type="text/css" href="/stylesheets/prism.css">
+	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
 
 	<script type="text/javascript">
 		// jshint ignore: start
@@ -44,6 +44,8 @@
 			<button class="btn btn-default record-btn">Record</button>
 			<button class="btn btn-default stop-btn">Stop</button>
 			<button class="btn btn-default save-btn">Save</button>
+			<button class="btn btn-default avail-btn">Available</button>
+			<button class="btn btn-default noavail-btn">Not Available</button>
 		</div>
 	</div>
 
@@ -68,7 +70,8 @@
 			synth.triggerRelease();
 		};
 
-		
 	</script>
+
+
 </body>
 </html>
