@@ -539,7 +539,7 @@
 			"file": ".gitignore",
 			"settings":
 			{
-				"buffer_size": 0,
+				"buffer_size": 130,
 				"line_ending": "Unix"
 			}
 		},
@@ -547,7 +547,7 @@
 			"file": "views/layout.html",
 			"settings":
 			{
-				"buffer_size": 478,
+				"buffer_size": 544,
 				"line_ending": "Unix"
 			}
 		},
@@ -555,7 +555,7 @@
 			"file": "public/js/main.js",
 			"settings":
 			{
-				"buffer_size": 0,
+				"buffer_size": 747,
 				"line_ending": "Unix"
 			}
 		},
@@ -563,7 +563,7 @@
 			"file": "package.json",
 			"settings":
 			{
-				"buffer_size": 407,
+				"buffer_size": 460,
 				"line_ending": "Unix"
 			}
 		},
@@ -1119,7 +1119,7 @@
 					"file": ".gitignore",
 					"settings":
 					{
-						"buffer_size": 0,
+						"buffer_size": 130,
 						"regions":
 						{
 						},
@@ -1235,15 +1235,15 @@
 					"file": "views/layout.html",
 					"settings":
 					{
-						"buffer_size": 478,
+						"buffer_size": 544,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								364,
-								364
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1352,7 +1352,7 @@
 					"file": "public/js/main.js",
 					"settings":
 					{
-						"buffer_size": 0,
+						"buffer_size": 747,
 						"regions":
 						{
 						},
@@ -1468,15 +1468,15 @@
 					"file": "package.json",
 					"settings":
 					{
-						"buffer_size": 407,
+						"buffer_size": 460,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								128,
-								128
+								0,
+								0
 							]
 						],
 						"settings":

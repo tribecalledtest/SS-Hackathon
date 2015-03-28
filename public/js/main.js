@@ -1,13 +1,14 @@
 //create one of Tone's built-in synthesizers
 //
 $( document ).ready(function() {
+	console.log( "Document ready!" );
+    var socket = io.connect();
+	console.log("Sockets on for client");
 
     var synth = new Tone.MonoSynth();
     var noteCount = 0;
 
     var score = {"synth": []};
-
-
 	//connect the synth to the master output channel
 	synth.toMaster();
 
@@ -38,6 +39,7 @@ $( document ).ready(function() {
 
 	});
 
+
 	$('li').on('click', function(){
 
 		if($(this).hasClass('recording')){
@@ -67,19 +69,9 @@ $( document ).ready(function() {
 	});
 
 
+	$(".save-btn").on("click", function() {
+		socket.emit("save", score); // this will go inside the listener for a click on the SEND button
+		score = {};
+
 	});
-
-
-	// 1. AUTO PLAY A NOTE EVERY QUARTER NOTE
-	//create a callback which is invoked every quarter note
-
-
-
-	// // 2. CONSOLE FUN: use the commands below in your browser console to trigger and release notes
-	// synth.triggerAttack("C4");
-	// synth.triggerRelease();
-
-	// // OR
-	//synth.triggerAttackRelease("C4", 0.25);
-
-
+});
