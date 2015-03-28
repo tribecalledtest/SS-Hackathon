@@ -33,5 +33,6 @@ $( document ).ready(function() {
 
 
 	var socket = io.connect();	
+	console.log("Sockets on for client");
 	
 });
