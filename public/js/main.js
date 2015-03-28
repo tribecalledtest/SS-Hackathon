@@ -10,7 +10,7 @@ $( document ).ready(function() {
 
     var score = {"synth": []};
     var receivedScoreCopy = null; // this is a backup copy of a received bottle's score for reverting from a bad recording
-
+    var updateId = null;
 	//connect the synth to the master output channel
 	synth.toMaster();
 
@@ -75,21 +75,32 @@ $( document ).ready(function() {
 
 	$(".save-btn").on("click", function() {
 		console.log(score);
-        socket.emit('save',{type: score});
+		if (updateId) {
+			socket.emit('save',{type: score, updateId : updateId});
+		} else {
+			socket.emit('save',{type: score});
+		}
 		// socket.emit("save", score); // this will go inside the listener for a click on the SEND button
 		score = {};
-
+		$('#KeyRack').css('border-color', 'red');
 	});
 
-	$(".receive-btn").on('click', function() {
+	$(".avail-btn").on('click', function() {
 		socket.emit('avail');
+		$('#KeyRack').css('border-color', 'green');
+	});
+
+	$(".noavail-btn").on('click', function() {
+		socket.emit('notavail');
+		$('#KeyRack').css('border-color', 'red');
 	});
 
 
 	socket.on("receive", function(receivedScore) {
-		alert('you got a bottle');
+		alert('you got a bottle id: ' + receivedScore._id);
 		score = receivedScore.bottle;
 		receivedScoreCopy = receivedScore;
+		updateId = receivedScore._id;
 		console.log(score);
 	});
 });
