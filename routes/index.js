@@ -25,9 +25,9 @@ var userRandomizer = function(){
 	var filteredResults = sessions.filter(function(el){
 		return el.available === true;
 	});
+	if (filteredResults.length === 0) return false;
 
 	var random = Math.floor(Math.random() * filteredResults.length);
-
 	sessions[sessions.indexOf(filteredResults[random])].available = false;
 	return filteredResults[random].id;
 };
@@ -73,6 +73,26 @@ module.exports = function(io) {
 			}));
 		});
 
+		socket.on('avail', function() {
+			setAvailability(socket.id,true);
+
+			// bottle randomizer
+			Bottle.find({available : true, modified : { $ne : socket.id}}, function(err, bottles) {
+				if (bottles.length > 0) {
+					var nextId = userRandomizer();
+					if (nextId) {
+						socket.broadcast.to(nextId).emit('receive', bottleRandomizer(bottles));
+					}
+					console.log(sessions);
+				}
+			});
+		});
+
+		socket.on('notavail', function() {
+			setAvailability(socket.id,false);
+			console.log(sessions);
+		});
+
 		//save bottle
 		socket.on('save', function(request) {
 			var nextId = userRandomizer();
@@ -80,25 +100,19 @@ module.exports = function(io) {
 			setAvailability(socket.id,true);
 			console.log(socket.id + 'available to receive bottle');
 
-			//save to the database, create new bottle
-			var newBottle = new Bottle({
-				bottle : request.type.reduce(function(notes_arr, note_element) {
-					notes_arr.push(new Note({
-						note : note_element.note,
-						noteLength : note_element.noteLength
-					}));
- 
-					return notes_arr;
- 
-				}, []),
-				available : true
-			});
- 
-			newBottle.save(function(err, saveBottle) {
-				if (err) return next(err);
-				console.log('saved');
-				socket.broadcast.to(userRandomizer()).emit("received", {data: saveBottle});
-			});
+			if (request.updateId) { // if update
+
+			} else { // if save
+				var newBottle = new Bottle({
+					bottle : request.type,
+					available : true,
+					modified : socket.id
+				});
+
+				newBottle.save(function(err, bottle) {
+					if (err) return console.log(err);
+				});
+			}
 
 			// Bottle.find({available: true}, function(err, bottles) {
 			// 	if (err) throw new Error("bottle query error");

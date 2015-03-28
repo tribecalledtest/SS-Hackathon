@@ -4,25 +4,19 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 
 
-var Bottle, Note;
+var Bottle;
 var Schema = mongoose.Schema;
-
-var noteSchema = new Schema({
-	note : {type : String}, // string set ex) C4-time
-	noteLength : {type : Number}
-});
 
 var bottleSchema = new Schema({
   // setup schema here
-  bottle : {type : [noteSchema]}, // added noteSchema to possibly add more features
-  available : Boolean
+  bottle : Object, // added noteSchema to possibly add more features
+  available : Boolean,
+  modified: String
 });
 
 Bottle = mongoose.model('Bottle', bottleSchema);
-Note = mongoose.model('Note', noteSchema);
 
 module.exports = {
-	Bottle : Bottle,
-	Note : Note
+	Bottle : Bottle
 };
 

@@ -7,6 +7,8 @@
   </head>
   <body>
   <button id='create'>Create Bottle</button>
+  <button id='avail'>Available</button>
+  <button id='notavail'>Not Available</button>
   <button id='save'>Save Bottle</button>
 
   {% block content %}{% endblock %}
@@ -22,15 +24,24 @@
         socket.emit('create');
       });
 
+      $('#avail').on('click', function() {
+        socket.emit('avail');
+      });
+
+      $('#notavail').on('click', function() {
+        socket.emit('notavail');
+      });
+
       //You need to check if they are using an existing bottle
       $('#save').on('click',function(){
         console.log('click save');
-        var notes = [{"note":"C4","noteLength":0.25},{"note":"D4","noteLength":0.25},{"note":"E4","noteLength":0.25}];
+        var notes = {'synth':[['0:0','C4'],['0:1',"C4"],["0:2","C5"]]};
+
         socket.emit('save',{type: notes});
       });
-      
-      socket.on("received", function(data){
-        console.log("bottle received: " + data);
+
+      socket.on("receive", function(data){
+        console.log(data);
       });
 
     </script>
