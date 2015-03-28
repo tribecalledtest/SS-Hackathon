@@ -9,7 +9,7 @@ var Schema = mongoose.Schema;
 
 var noteSchema = new Schema({
 	note : {type : String}, // string set ex) C4-time
-	time : {type : Number}
+	noteLength : {type : Number}
 });
 
 var bottleSchema = new Schema({
