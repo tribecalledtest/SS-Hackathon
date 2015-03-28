@@ -6,11 +6,45 @@
     <link href="/stylesheets/style.css" rel="stylesheet">
   </head>
   <body>
+  <button id='create'>Create Bottle</button>
+  <button id='avail'>Available</button>
+  <button id='notavail'>Not Available</button>
+  <button id='save'>Save Bottle</button>
+
   {% block content %}{% endblock %}
     <script src="/socket.io/socket.io.js"></script>
     <script src="/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="/bower_components/tone/build/Tone.js"></script>
     <script src="/js/main.js"></script>
+    <script>
+      var socket = io.connect();
+      $('#create').on('click',function(){
+        console.log('click create');
+        socket.emit('create');
+      });
+
+      $('#avail').on('click', function() {
+        socket.emit('avail');
+      });
+
+      $('#notavail').on('click', function() {
+        socket.emit('notavail');
+      });
+
+      //You need to check if they are using an existing bottle
+      $('#save').on('click',function(){
+        console.log('click save');
+        var notes = {'synth':[['0:0','C4'],['0:1',"C4"],["0:2","C5"]]};
+
+        socket.emit('save',{type: notes});
+      });
+
+      socket.on("receive", function(data){
+        console.log(data);
+      });
+
+    </script>
   </body>
 </html>
+
