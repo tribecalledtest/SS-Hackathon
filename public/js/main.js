@@ -67,7 +67,7 @@ $( document ).ready(function() {
 		$('.play-btn').addClass('playing');
 		$('.play-btn').text('Playing');
 
-		console.log('playing', score);
+		
 		 //route all notes on the "synth" channel
 
 		Tone.Note.route("synth", function(time, note){
@@ -90,21 +90,28 @@ $( document ).ready(function() {
 		// socket.emit("save", score); // this will go inside the listener for a click on the SEND button
 		score = {'synth':[]};
 		$('#KeyRack').css('border-color', 'red');
+		$('.avail-btn').removeAttr('disabled');
+        $('.noavail-btn').attr('disabled', 'disabled');
 	});
+
 
 	$(".avail-btn").on('click', function() {
-		socket.emit('avail');
-		$('#KeyRack').css('border-color', 'green');
-	});
+        socket.emit('avail');
+        $('#KeyRack').css('border-color', 'green');
+        $('.noavail-btn').removeAttr('disabled');
+        $('.avail-btn').attr('disabled', 'disabled');
+    });
 
-	$(".noavail-btn").on('click', function() {
-		socket.emit('notavail');
-		$('#KeyRack').css('border-color', 'red');
-	});
+    $(".noavail-btn").on('click', function() {
+        socket.emit('notavail');
+        $('#KeyRack').css('border-color', 'red');
+        $('.avail-btn').removeAttr('disabled');
+        $('.noavail-btn').attr('disabled', 'disabled');
+    });
 
 
 	socket.on("receive", function(receivedScore) {
-		console.log('recieved bottle',receivedScore.bottle);
+
 		alert('you got a bottle id: ' + receivedScore._id);
 		score = receivedScore.bottle;
 		noteCount = receivedScore.bottle.synth.length;
