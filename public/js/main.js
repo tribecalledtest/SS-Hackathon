@@ -1,41 +1,70 @@
 //create one of Tone's built-in synthesizers
 //
 $( document ).ready(function() {
-    console.log( "ready!" );
+
     var synth = new Tone.MonoSynth();
+    var noteCount = 0;
+
+    var score = {"synth": []};
+
 
 	//connect the synth to the master output channel
 	synth.toMaster();
+
+
 	function Note(note,noteLength){
 		this.note = note;
 		this.noteLength = noteLength;
 	}
 
-
-	$('.play-btn').on('click', function(){
-		console.log("PLAY");
-		var noteArr = [new Note('C4',0.25), new Note('D4',0.25), new Note('E4',0.25) ];
-		var count =0;
-		noteArr.forEach(function(noteObj){
-			count++;
-			var note = noteObj.note;
-			var noteLength = noteObj.noteLength;
-			console.log(note,noteLength);
-
-			synth.triggerAttackRelease(note, noteLength, count*noteLength*2);
-		});
+	$('.record-btn').on('click',function(){
+		$('li').addClass('recording');
+		$('.record-btn').addClass('recording');
+		$('.record-btn').text('Recording');
 	});
 
-	// Tone.Transport.setInterval(function(time){
- //    //trigger middle C for the duration of an 8th note
- //    	synth.triggerAttackRelease("C4", "8n", time);
-	// }, "8n");
+	$('.stop-btn').on('click',function(){
+		$('.record-btn').removeClass('recording');
+		$('.record-btn').text('Record');
+		$('.play-btn').removeClass('playing');
+		$('.play-btn').text('Play');
+		Tone.Transport.stop();
+
+	});
+
+	$('.revert-btn').on('click',function(){
+		score = {"synth": []};
+		Tone.Transport.clearTimelines();
+
+	});
+
+	$('li').on('click', function(){
+
+		if($(this).hasClass('recording')){
+			var note = $(this).attr('id');
+
+			score.synth.push(['0:'+noteCount++,note]);
+		}
+
+		});
 
 
 
-	
 
-	
+	$('.play-btn').on('click',function(){
+		 //parse the score into Notes
+		Tone.Note.parseScore(score);
+		$('.play-btn').addClass('playing');
+		$('.play-btn').text('Playing');
+
+		 //route all notes on the "synth" channel
+		Tone.Note.route("synth", function(time, note){
+
+	    	synth.triggerAttackRelease(note,"8n", time);
+		});
+		Tone.Transport.start();
+
+	});
 
 
 	});
