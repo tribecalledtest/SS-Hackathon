@@ -6,4 +6,11 @@ router.get('/', function(req, res, next) {
   res.render('index');
 });
 
-module.exports = router;
+module.exports = function(io) {
+
+	io.on('connection', function(socket) {
+		console.log('connected' + socket.id);
+	});
+
+	return router;
+};
