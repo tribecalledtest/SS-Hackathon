@@ -25,3 +25,5 @@ synth.toMaster();
 
 // // OR
 // synth.triggerAttackRelease("C4", 0.25);
+
+var socket = io.connect();
