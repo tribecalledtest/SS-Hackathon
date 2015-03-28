@@ -80,7 +80,7 @@ $( document ).ready(function() {
 	});
 
 
-	socket.on("EVENT", function(receivedScore) {
+	socket.on("receive", function(receivedScore) {
 		score = receivedScore;
 		receivedScoreCopy = receivedScore;
 	});
