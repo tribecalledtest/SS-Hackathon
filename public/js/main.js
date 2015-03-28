@@ -9,6 +9,8 @@ $( document ).ready(function() {
     var noteCount = 0;
 
     var score = {"synth": []};
+    var receivedScoreCopy = null; // this is a backup copy of a received bottle's score for reverting from a bad recording
+
 	//connect the synth to the master output channel
 	synth.toMaster();
 
@@ -34,9 +36,14 @@ $( document ).ready(function() {
 	});
 
 	$('.revert-btn').on('click',function(){
-		score = {"synth": []};
-		Tone.Transport.clearTimelines();
+		if (receivedScore) {
+			score = receivedScoreCopy;
+		}
+		else {
+			score = {"synth": []};
+		}
 
+		Tone.Transport.clearTimelines();
 	});
 
 
@@ -48,10 +55,7 @@ $( document ).ready(function() {
 			score.synth.push(['0:'+noteCount++,note]);
 		}
 
-		});
-
-
-
+	});
 
 	$('.play-btn').on('click',function(){
 		 //parse the score into Notes
@@ -73,5 +77,11 @@ $( document ).ready(function() {
 		socket.emit("save", score); // this will go inside the listener for a click on the SEND button
 		score = {};
 
+	});
+
+
+	socket.on("EVENT", function(receivedScore) {
+		score = receivedScore;
+		receivedScoreCopy = receivedScore;
 	});
 });
