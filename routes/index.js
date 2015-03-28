@@ -34,29 +34,35 @@ var userRandomizer = function(){
 
 var bottleRandomizer = function(bottles){
 	var random = Math.floor(Math.random() * bottles.length);
-	return bottles[random];
+	return random;
 };
 
 module.exports = function(io) {
-
+	var interval;
 	io.on('connection', function(socket) {
 		sessions.push({
 			id: socket.id,
-			available: true
+			available: false
 		});
-
-		setInterval(function() {
-			// bottle randomizer
-			Bottle.find({available : true}, function(err, bottles) {
-				if (bottles.length > 0) {
-					var nextId = userRandomizer();
-					if (nextId) {
-						socket.broadcast.to(nextId).emit('receive', bottleRandomizer(bottles));
+		if (!interval) {
+			interval = setInterval(function() {
+				// bottle randomizer
+				// modified : {$ne : socket.id}
+				console.log('event loop');
+				Bottle.find({available : true}, function(err, bottles) {
+					if (bottles.length > 0) {
+						var nextId = userRandomizer();
+						var randomBottleIndex = bottleRandomizer(bottles);
+						if (nextId) {
+							bottles[randomBottleIndex].available = false;
+							bottles[randomBottleIndex].save(function(err, bottle) {
+								socket.broadcast.to(nextId).emit('receive', bottle);
+							});
+						}
 					}
-					console.log(sessions);
-				}
-			});
-		}, 1000);
+				});
+			}, 1000);
+		}
 
 		console.log(sessions);
 
@@ -88,6 +94,7 @@ module.exports = function(io) {
 
 		socket.on('avail', function() {
 			setAvailability(socket.id,true);
+			console.log(sessions);
 		});
 
 		socket.on('notavail', function() {
@@ -97,13 +104,15 @@ module.exports = function(io) {
 
 		//save bottle
 		socket.on('save', function(request) {
-			var nextId = userRandomizer();
-
-			setAvailability(socket.id,true);
+			// setAvailability(socket.id,true);
 			console.log(socket.id + 'available to receive bottle');
 
 			if (request.updateId) { // if update
-
+				Bottle.findByIdAndUpdate(request.updateId, {bottle : request.type, modified : socket.id, available: true} ,function(err, updated) {
+					if (err) return console.log(err);
+					console.log(updated);
+					setAvailability(socket.id,false);
+				});
 			} else { // if save
 				var newBottle = new Bottle({
 					bottle : request.type,
@@ -113,6 +122,7 @@ module.exports = function(io) {
 
 				newBottle.save(function(err, bottle) {
 					if (err) return console.log(err);
+					setAvailability(socket.id,false);
 				});
 			}
 
