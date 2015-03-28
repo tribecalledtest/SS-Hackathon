@@ -11,6 +11,7 @@ router.get('/', function(req, res, next) {
   res.render('index');
 });
 var sessions = [];
+var bottles = [];
 
 var setAvailability = function(socket_id, available){
 	sessions.forEach(function(user){
@@ -20,7 +21,21 @@ var setAvailability = function(socket_id, available){
 	});
 };
 
+var userRandomizer = function(){
+	var filteredResults = sessions.filter(function(el){
+		return el.available === true;
+	});
 
+	var random = Math.floor(Math.random() * filteredResults.length);
+
+	sessions[sessions.indexOf(filteredResults[random])].available = false;
+	return filteredResults[random].id;
+};
+
+var bottleRandomizer = function(bottles){
+	var random = Math.floor(Math.random() * bottles.length);
+	return bottles[random];
+};
 
 module.exports = function(io) {
 
@@ -29,6 +44,8 @@ module.exports = function(io) {
 			id: socket.id,
 			available: true
 		});
+
+		console.log(sessions);
 
 		socket.on('disconnect', function(){
 			console.log("before " + sessions);
@@ -58,8 +75,11 @@ module.exports = function(io) {
 
 		//save bottle
 		socket.on('save', function(request) {
+			var nextId = userRandomizer();
+
 			setAvailability(socket.id,true);
 			console.log(socket.id + 'available to receive bottle');
+
 			//save to the database, create new bottle
 			var newBottle = new Bottle({
 				bottle : request.type.reduce(function(notes_arr, note_element) {
@@ -70,14 +90,21 @@ module.exports = function(io) {
  
 					return notes_arr;
  
-				}, [])
+				}, []),
+				available : true
 			});
  
 			newBottle.save(function(err, saveBottle) {
 				if (err) return next(err);
- 
 				console.log('saved');
+				socket.broadcast.to(userRandomizer()).emit("received", {data: saveBottle});
 			});
+
+			// Bottle.find({available: true}, function(err, bottles) {
+			// 	if (err) throw new Error("bottle query error");
+			// 	// console.log(nextId, sessions);
+			// 	socket.broadcast.to(nextId).emit('received', bottleRandomizer(bottles));
+			// });
 		});
 
 		console.log('connected' + socket.id);

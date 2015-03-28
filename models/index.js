@@ -14,12 +14,12 @@ var noteSchema = new Schema({
 
 var bottleSchema = new Schema({
   // setup schema here
-  bottle : {type : [noteSchema]} // added noteSchema to possibly add more features
+  bottle : {type : [noteSchema]}, // added noteSchema to possibly add more features
+  available : Boolean
 });
 
 Bottle = mongoose.model('Bottle', bottleSchema);
 Note = mongoose.model('Note', noteSchema);
-
 
 module.exports = {
 	Bottle : Bottle,

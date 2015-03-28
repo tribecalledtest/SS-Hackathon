@@ -28,6 +28,10 @@
         var notes = [{"note":"C4","noteLength":0.25},{"note":"D4","noteLength":0.25},{"note":"E4","noteLength":0.25}];
         socket.emit('save',{type: notes});
       });
+      
+      socket.on("received", function(data){
+        console.log("bottle received: " + data);
+      });
 
     </script>
   </body>
