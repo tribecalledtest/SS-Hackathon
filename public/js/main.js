@@ -27,3 +27,4 @@ synth.toMaster();
 // synth.triggerAttackRelease("C4", 0.25);
 
 var socket = io.connect();
+socket.emit('createBottle', { data : [{"note":"C4","noteLength":0.25},{"note":"D4","noteLength":0.25},{"note":"E4","noteLength":0.25}] });

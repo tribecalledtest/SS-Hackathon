@@ -4,12 +4,16 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 
 
-var Bottle, Note;
+var Bottle, Note, User;
 var Schema = mongoose.Schema;
+
+var userSchema = new Schema({
+	name : {type : String, required : true},
+});
 
 var noteSchema = new Schema({
 	note : {type : String}, // string set ex) C4-time
-	time : {type : Number}
+	noteLength : {type : Number}
 });
 
 var bottleSchema = new Schema({
