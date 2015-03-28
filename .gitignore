@@ -1,0 +1,10 @@
+node_modules
+bower_components
+.monitor
+config/imager.js
+npm-debug.log
+Makefile
+.DS_Store
+.idea
+.sublime-project
+.sublime-workspace
