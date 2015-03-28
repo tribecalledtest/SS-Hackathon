@@ -1,5 +1,67 @@
-{% extends "layout.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+	<title>NOTE IN A BOTTLE</title>
 
-{% block content %}
-Hello World
-{% endblock %}
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+	<script type="text/javascript" src="js/build/jquery.min.js"></script>
+	<script type="text/javascript" src="js/build/Tone.js"></script>
+	<script type="text/javascript" src="js/build/Tone.Preset.js"></script>
+	<script type="text/javascript" src="js/build/nexusUI.js"></script>
+	<script type="text/javascript" src="js/build/Interface.js"></script>
+	<script type="text/javascript" src="js/build/qwerty-hancock.js"></script>
+	<script type="text/javascript" src="js/main.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="stylesheets/examples.css">
+	<link rel="stylesheet" type="text/css" href="stylesheets/prism.css">
+	<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+
+	<script type="text/javascript">
+		// jshint ignore: start
+	</script>
+
+</head>
+<body>
+	<h1>Note In A Bottle</h1>
+
+	<div id="Content">
+		<div id="KeyRack">
+			<div id="Keyboard"></div>
+		</div>
+		<!-- <div id="Oscillator"></div>
+		<div id="Envelope">
+			<div id="Amplitude"></div>
+			<div id="FilterEnvelope"></div>
+		</div>
+		<div id="Filter"></div>
+		<div id="Presets"></div> -->
+		<button class="play-btn">Play</button>
+	</div>
+
+
+	<script id="ToneCode" type="text/javascript">			
+		var synth = new Tone.MonoSynth().toMaster();
+	</script>
+	<script id="GUI" type="text/javascript">
+		Interface.Rack("KeyRack", "Keyboard", true).open();
+		//the keyboard
+		var keyboard = new QwertyHancock({
+			id: "Keyboard",
+			width: $("#KeyRack").width(),
+			height: 75,
+			octaves : 1.5,
+			startNote: "C3",
+		});
+		keyboard.keyDown = function(note, freq){
+			synth.triggerAttack(freq);
+		};
+		keyboard.keyUp = function(){
+			synth.triggerRelease();
+		};
+
+		
+	</script>
+</body>
+</html>
