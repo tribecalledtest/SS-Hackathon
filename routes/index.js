@@ -48,7 +48,7 @@ module.exports = function(io) {
 			interval = setInterval(function() {
 				// bottle randomizer
 				// modified : {$ne : socket.id}
-				console.log('event loop');
+
 				Bottle.find({available : true}, function(err, bottles) {
 					if (bottles.length > 0) {
 						var nextId = userRandomizer();
@@ -64,7 +64,7 @@ module.exports = function(io) {
 			}, 1000);
 		}
 
-		console.log(sessions);
+		
 
 		socket.on('disconnect', function(){
 			console.log("before " + sessions);
@@ -74,7 +74,7 @@ module.exports = function(io) {
 				})
 			));
 
-			console.log("after " + sessions);
+
 		});
 
 		//create bottle
@@ -110,7 +110,7 @@ module.exports = function(io) {
 			if (request.updateId) { // if update
 				Bottle.findByIdAndUpdate(request.updateId, {bottle : request.type, modified : socket.id, available: true} ,function(err, updated) {
 					if (err) return console.log(err);
-					console.log(updated);
+					
 					setAvailability(socket.id,false);
 				});
 			} else { // if save
@@ -133,7 +133,7 @@ module.exports = function(io) {
 			// });
 		});
 
-		console.log('connected' + socket.id);
+		
 	});
 
 	return router;
