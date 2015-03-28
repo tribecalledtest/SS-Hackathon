@@ -1,8 +1,11 @@
 //create one of Tone's built-in synthesizers
 //
 $( document ).ready(function() {
-    console.log( "ready!" );
+    console.log( "Document ready!" );
+    
     var synth = new Tone.MonoSynth();
+    var socket = io.connect();	
+	console.log("Sockets on for client");
 
 	//connect the synth to the master output channel
 	synth.toMaster();
@@ -32,7 +35,9 @@ $( document ).ready(function() {
 	// }, "8n");
 
 
-	var socket = io.connect();	
-	console.log("Sockets on for client");
 	
+	$(".save-btn").on("click", function() {
+		socket.emit("save", score); // this will go inside the listener for a click on the SEND button
+		score = {};
+	});
 });
