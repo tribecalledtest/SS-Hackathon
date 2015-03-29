@@ -13,6 +13,7 @@ router.get('/', function(req, res, next) {
 var sessions = [];
 var bottles = [];
 
+// sets all currently active clients to available
 var setAvailability = function(socket_id, available){
 	sessions.forEach(function(user){
 		if(user.id == socket_id) {
@@ -21,18 +22,25 @@ var setAvailability = function(socket_id, available){
 	});
 };
 
+
+
 var userRandomizer = function(){
+	//get all available users
 	var filteredResults = sessions.filter(function(el){
 		return el.available === true;
 	});
+	//if no available users return
 	if (filteredResults.length === 0) return false;
 
+	//get random user and  set their availability to false
 	var random = Math.floor(Math.random() * filteredResults.length);
 	sessions[sessions.indexOf(filteredResults[random])].available = false;
+	//return their user ID
 	return filteredResults[random].id;
 };
 
 var bottleRandomizer = function(bottles){
+	//randomly select a number that will represent the bottle
 	var random = Math.floor(Math.random() * bottles.length);
 	return random;
 };
@@ -40,6 +48,7 @@ var bottleRandomizer = function(bottles){
 module.exports = function(io) {
 	var interval;
 	io.on('connection', function(socket) {
+		//on connection add user to sessions array
 		sessions.push({
 			id: socket.id,
 			available: false
@@ -48,12 +57,17 @@ module.exports = function(io) {
 			interval = setInterval(function() {
 				// bottle randomizer
 				// modified : {$ne : socket.id}
+				//find an available bottle
 
 				Bottle.find({available : true}, function(err, bottles) {
 					if (bottles.length > 0) {
+						//get random user ID
 						var nextId = userRandomizer();
+						// get random bottle index
 						var randomBottleIndex = bottleRandomizer(bottles);
 						if (nextId) {
+							//if there is an available user ID set  broadcast bottle via socket
+							// and make it unavailable
 							bottles[randomBottleIndex].available = false;
 							bottles[randomBottleIndex].save(function(err, bottle) {
 								socket.broadcast.to(nextId).emit('receive', bottle);
@@ -64,7 +78,7 @@ module.exports = function(io) {
 			}, 1000);
 		}
 
-		
+
 
 		socket.on('disconnect', function(){
 			console.log("before " + sessions);
@@ -110,7 +124,7 @@ module.exports = function(io) {
 			if (request.updateId) { // if update
 				Bottle.findByIdAndUpdate(request.updateId, {bottle : request.type, modified : socket.id, available: true} ,function(err, updated) {
 					if (err) return console.log(err);
-					
+
 					setAvailability(socket.id,false);
 				});
 			} else { // if save
@@ -133,7 +147,7 @@ module.exports = function(io) {
 			// });
 		});
 
-		
+
 	});
 
 	return router;
