@@ -1,4 +1,4 @@
-# Note in a bottle
+# Note in a bottle\n
 A message in a bottle is a musical note, 
 the sea is the internet, 
 locations on the seashore are people. 
