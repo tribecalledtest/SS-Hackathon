@@ -1,5 +1,5 @@
-# Note in a bottle\n
-A message in a bottle is a musical note, 
+# Note in a bottle
+A message in a bottle is a musical note,\n 
 the sea is the internet, 
 locations on the seashore are people. 
 
